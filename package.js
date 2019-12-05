@@ -1,6 +1,6 @@
 Package.describe({
   name: 'clinical:hl7-resource-measure',
-  version: '2.0.5',
+  version: '2.0.6',
   summary: 'HL7 FHIR Resource - Measure',
   git: 'https://github.com/clinical-meteor/hl7-resource-measure',
   documentation: 'README.md'

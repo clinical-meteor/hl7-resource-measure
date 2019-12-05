@@ -47,13 +47,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-// export class EncounterDetail extends React.Component {
+// export class MeasureDetail extends React.Component {
 //   constructor(props) {
 //     super(props);
 //     this.state = {
-//       encounterId: false,
-//       encounter: {
-//         resourceType: 'Encounter',
+//       measureId: false,
+//       measure: {
+//         resourceType: 'Measure',
 //         status: 'preliminary',
 //         category: {
 //           text: ''
@@ -92,45 +92,45 @@ const useStyles = makeStyles(theme => ({
 //       }
 //     }
 //   }
-//   dehydrateFhirResource(encounter) {
+//   dehydrateFhirResource(measure) {
 //     let formData = Object.assign({}, this.state.form);
 
-//     formData.category = get(encounter, 'type.text')
-//     formData.code = get(encounter, 'code.text')
-//     formData.value = get(encounter, 'valueString')
-//     formData.comparator = get(encounter, 'valueQuantity.comparator')
-//     formData.quantity = get(encounter, 'valueQuantity.value')
-//     formData.unit = get(encounter, 'valueQuantity.unit')
-//     formData.deviceDisplay = get(encounter, 'device.display')
-//     formData.subjectDisplay = get(encounter, 'subject.display')
-//     formData.subjectReference = get(encounter, 'subject.reference')
-//     formData.effectiveDateTime = get(encounter, 'effectiveDateTime')
-//     formData.status = get(encounter, 'status')
+//     formData.category = get(measure, 'type.text')
+//     formData.code = get(measure, 'code.text')
+//     formData.value = get(measure, 'valueString')
+//     formData.comparator = get(measure, 'valueQuantity.comparator')
+//     formData.quantity = get(measure, 'valueQuantity.value')
+//     formData.unit = get(measure, 'valueQuantity.unit')
+//     formData.deviceDisplay = get(measure, 'device.display')
+//     formData.subjectDisplay = get(measure, 'subject.display')
+//     formData.subjectReference = get(measure, 'subject.reference')
+//     formData.effectiveDateTime = get(measure, 'effectiveDateTime')
+//     formData.status = get(measure, 'status')
 
-//     formData.loincCode = get(encounter, 'code.codeable[0].code')
-//     formData.loincCodeText = get(encounter, 'code.text')
-//     formData.loincCodeDisplay = get(encounter, 'code.codeable[0].display')
+//     formData.loincCode = get(measure, 'code.codeable[0].code')
+//     formData.loincCodeText = get(measure, 'code.text')
+//     formData.loincCodeDisplay = get(measure, 'code.codeable[0].display')
 
 //     return formData;
 //   }
 //   shouldComponentUpdate(nextProps){
-//     process.env.NODE_ENV === "test" && console.log('EncounterDetail.shouldComponentUpdate()', nextProps, this.state)
+//     process.env.NODE_ENV === "test" && console.log('MeasureDetail.shouldComponentUpdate()', nextProps, this.state)
 //     let shouldUpdate = true;
 
-//     // received an encounter from the table; okay lets update again
-//     if(nextProps.encounterId !== this.state.encounterId){
+//     // received an measure from the table; okay lets update again
+//     if(nextProps.measureId !== this.state.measureId){
 
-//       if(nextProps.encounter){
-//         this.setState({encounter: nextProps.encounter})     
-//         this.setState({form: this.dehydrateFhirResource(nextProps.encounter)})       
+//       if(nextProps.measure){
+//         this.setState({measure: nextProps.measure})     
+//         this.setState({form: this.dehydrateFhirResource(nextProps.measure)})       
 //       }
 
-//       this.setState({encounterId: nextProps.encounterId})      
+//       this.setState({measureId: nextProps.measureId})      
 //       shouldUpdate = true;
 //     }
 
 //     // both false; don't take any more updates
-//     if(nextProps.encounter === this.state.encounter){
+//     if(nextProps.measure === this.state.measure){
 //       shouldUpdate = false;
 //     }
     
@@ -138,8 +138,8 @@ const useStyles = makeStyles(theme => ({
 //   }
 //   getMeteorData() {
 //     let data = {
-//       encounterId: this.props.encounterId,
-//       encounter: false,
+//       measureId: this.props.measureId,
+//       measure: false,
 //       form: this.state.form,
 //       displayDatePicker: false
 //     };
@@ -148,12 +148,12 @@ const useStyles = makeStyles(theme => ({
 //       data.displayDatePicker = this.props.displayDatePicker
 //     }
     
-//     if(this.props.encounter){
-//       data.encounter = this.props.encounter;
-//       data.form = this.dehydrateFhirResource(this.props.encounter);
+//     if(this.props.measure){
+//       data.measure = this.props.measure;
+//       data.form = this.dehydrateFhirResource(this.props.measure);
 //     }
 
-//     //console.log("EncounterDetail[data]", data);
+//     //console.log("MeasureDetail[data]", data);
 //     return data;
 //   }
 
@@ -184,7 +184,7 @@ const useStyles = makeStyles(theme => ({
 //     }
 //   }
 //   render() {
-//     // console.log('EncounterDetail.render()', this.state)
+//     // console.log('MeasureDetail.render()', this.state)
 //     //let formData = this.state.form;
 
 //     var patientInputs;
@@ -196,7 +196,7 @@ const useStyles = makeStyles(theme => ({
 //             name='subjectDisplay'
 //             label='Subject Name'
 //             // TimelineSidescrollPage dialog popup
-//             // Getting the following when passing an encounter in via props
+//             // Getting the following when passing an measure in via props
 //             // A component is changing a controlled input of type text to be uncontrolled. Input elements should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled input element for the lifetime of the component. 
 //             // value={ get(this, 'data.form.subjectDisplay') }
 //             // onChange={ this.changeState.bind(this, 'subjectDisplay')}
@@ -233,7 +233,7 @@ const useStyles = makeStyles(theme => ({
 //     }
 
 //     return (
-//       <div id={this.props.id} className="encounterDetail">
+//       <div id={this.props.id} className="measureDetail">
 //         <CardHeader>
 //           { patientInputs }
 
@@ -270,27 +270,27 @@ const useStyles = makeStyles(theme => ({
 //           </Row>
 //         </CardHeader>
 //         <CardActions>
-//           { this.determineButtons(this.data.encounterId) }
+//           { this.determineButtons(this.data.measureId) }
 //         </CardActions>
 //       </div>
 //     );
 //   }
-//   determineButtons(encounterId) {
-//     if (encounterId) {
+//   determineButtons(measureId) {
+//     if (measureId) {
 //       return (
 //         <div>
-//           <Button id="updateEncounterButton" className="saveEncounterButton" onClick={this.handleSaveButton.bind(this)} style={{marginRight: '20px'}} >Save</Button>
-//           <Button id="deleteEncounterButton" onClick={this.handleDeleteButton.bind(this)}> Delete </Button>
+//           <Button id="updateMeasureButton" className="saveMeasureButton" onClick={this.handleSaveButton.bind(this)} style={{marginRight: '20px'}} >Save</Button>
+//           <Button id="deleteMeasureButton" onClick={this.handleDeleteButton.bind(this)}> Delete </Button>
 //         </div>
 //       );
 //     } else {
 //       return (
-//         <Button id="saveEncounterButton" label="Save" onClick={this.handleSaveButton.bind(this)}>Save</Button>
+//         <Button id="saveMeasureButton" label="Save" onClick={this.handleSaveButton.bind(this)}>Save</Button>
 //       );
 //     }
 //   }
 //   updateFormData(formData, field, textValue){
-//     if(process.env.NODE_ENV === "test") console.log("EncounterDetail.updateFormData", formData, field, textValue);
+//     if(process.env.NODE_ENV === "test") console.log("MeasureDetail.updateFormData", formData, field, textValue);
 
 //     switch (field) {
 //       case "category":
@@ -340,71 +340,71 @@ const useStyles = makeStyles(theme => ({
 //     if(process.env.NODE_ENV === "test") console.log("formData", formData);
 //     return formData;
 //   }
-//   updateEncounter(encounterData, field, textValue){
-//     if(process.env.NODE_ENV === "test") console.log("EncounterDetail.updateEncounter", encounterData, field, textValue);
+//   updateMeasure(measureData, field, textValue){
+//     if(process.env.NODE_ENV === "test") console.log("MeasureDetail.updateMeasure", measureData, field, textValue);
 
 //     switch (field) {
 //       case "category":
-//         set(encounterData, 'category.text', textValue)
+//         set(measureData, 'category.text', textValue)
 //         break;
 //       case "code":
-//         set(encounterData, 'code.text', textValue)
+//         set(measureData, 'code.text', textValue)
 //         break;        
 //       case "value":
-//         set(encounterData, 'valueString', textValue)
+//         set(measureData, 'valueString', textValue)
 //         break;        
 //       case "comparator":
-//         set(encounterData, 'valueQuantity.comparator', textValue)
+//         set(measureData, 'valueQuantity.comparator', textValue)
 //         break;        
 //       case "quantity":
-//         set(encounterData, 'valueQuantity.value', textValue)
+//         set(measureData, 'valueQuantity.value', textValue)
 //         break;
 //       case "unit":
-//         set(encounterData, 'valueQuantity.unit', textValue)
+//         set(measureData, 'valueQuantity.unit', textValue)
 //         break;
 //       case "deviceDisplay":
-//         set(encounterData, 'device.display', textValue)
+//         set(measureData, 'device.display', textValue)
 //         break;
 //       case "subjectDisplay":
-//         set(encounterData, 'subject.display', textValue)
+//         set(measureData, 'subject.display', textValue)
 //         break;
 //       case "subjectReference":
-//         set(encounterData, 'subject.reference', textValue)
+//         set(measureData, 'subject.reference', textValue)
 //         break;
 //       case "effectiveDateTime":
-//         set(encounterData, 'effectiveDateTime', textValue)
+//         set(measureData, 'effectiveDateTime', textValue)
 //         break;    
 //       case "status":
-//         set(encounterData, 'status', textValue)
+//         set(measureData, 'status', textValue)
 //         break;    
 //       case "loincCode":
-//         set(encounterData, 'code.coding[0].code', textValue)
+//         set(measureData, 'code.coding[0].code', textValue)
 //         break;
 //       case "loincCodeText":
-//         set(encounterData, 'code.text', textValue)
+//         set(measureData, 'code.text', textValue)
 //         break;
 //       case "loincCodeDisplay":
-//         set(encounterData, 'code.coding[0].display', textValue)
+//         set(measureData, 'code.coding[0].display', textValue)
 //         break;
 //     }
-//     return encounterData;
+//     return measureData;
 //   }
 
 //   changeState(field, event, textValue){
 //     if(process.env.NODE_ENV === "test") console.log("   ");
-//     if(process.env.NODE_ENV === "test") console.log("EncounterDetail.changeState", field, textValue);
+//     if(process.env.NODE_ENV === "test") console.log("MeasureDetail.changeState", field, textValue);
 //     if(process.env.NODE_ENV === "test") console.log("this.state", this.state);
 
 //     let formData = Object.assign({}, this.state.form);
-//     let encounterData = Object.assign({}, this.state.encounter);
+//     let measureData = Object.assign({}, this.state.measure);
 
 //     formData = this.updateFormData(formData, field, textValue);
-//     encounterData = this.updateEncounter(encounterData, field, textValue);
+//     measureData = this.updateMeasure(measureData, field, textValue);
 
-//     if(process.env.NODE_ENV === "test") console.log("encounterData", encounterData);
+//     if(process.env.NODE_ENV === "test") console.log("measureData", measureData);
 //     if(process.env.NODE_ENV === "test") console.log("formData", formData);
 
-//     this.setState({encounter: encounterData})
+//     this.setState({measure: measureData})
 //     this.setState({form: formData})
 //   }
 
@@ -417,52 +417,52 @@ const useStyles = makeStyles(theme => ({
 //       this.props.onUpsert(self);
 //     }
 //     // if(process.env.NODE_ENV === "test") console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^&&')
-//     // console.log('Saving a new Encounter...', this.state)
+//     // console.log('Saving a new Measure...', this.state)
 
 //     // let self = this;
-//     // let fhirEncounterData = Object.assign({}, this.state.encounter);
+//     // let fhirMeasureData = Object.assign({}, this.state.measure);
 
-//     // if(process.env.NODE_ENV === "test") console.log('fhirEncounterData', fhirEncounterData);
+//     // if(process.env.NODE_ENV === "test") console.log('fhirMeasureData', fhirMeasureData);
 
 
-//     // let encounterValidator = EncounterSchema.newContext();
-//     // encounterValidator.validate(fhirEncounterData)
+//     // let measureValidator = MeasureSchema.newContext();
+//     // measureValidator.validate(fhirMeasureData)
 
-//     // console.log('IsValid: ', encounterValidator.isValid())
-//     // console.log('ValidationErrors: ', encounterValidator.validationErrors());
+//     // console.log('IsValid: ', measureValidator.isValid())
+//     // console.log('ValidationErrors: ', measureValidator.validationErrors());
 
-//     // if (this.data.encounterId) {
-//     //   if(process.env.NODE_ENV === "test") console.log("Updating encounter...");
-//     //   delete fhirEncounterData._id;
+//     // if (this.data.measureId) {
+//     //   if(process.env.NODE_ENV === "test") console.log("Updating measure...");
+//     //   delete fhirMeasureData._id;
 
-//     //   Encounters._collection.update({_id: this.data.encounterId}, {$set: fhirEncounterData },function(error, result){
+//     //   Measures._collection.update({_id: this.data.measureId}, {$set: fhirMeasureData },function(error, result){
 //     //     if (error) {
-//     //       if(process.env.NODE_ENV === "test") console.log("Encounters.insert[error]", error);
+//     //       if(process.env.NODE_ENV === "test") console.log("Measures.insert[error]", error);
 //     //       console.log('error', error)
 //     //       Bert.alert(error.reason, 'danger');
 //     //     }
 //     //     if (result) {
 //     //       if(self.props.onUpdate){
-//     //         self.props.onUpdate(self.data.encounterId);
+//     //         self.props.onUpdate(self.data.measureId);
 //     //       }
-//     //       Bert.alert('Encounter added!', 'success');
+//     //       Bert.alert('Measure added!', 'success');
 //     //     }
 //     //   });
 //     // } else {
-//     //   fhirEncounterData.effectiveDateTime = new Date();
-//     //   if (process.env.NODE_ENV === "test") console.log("create a new encounter", fhirEncounterData);
+//     //   fhirMeasureData.effectiveDateTime = new Date();
+//     //   if (process.env.NODE_ENV === "test") console.log("create a new measure", fhirMeasureData);
 
-//     //   Encounters._collection.insert(fhirEncounterData, function(error, result){
+//     //   Measures._collection.insert(fhirMeasureData, function(error, result){
 //     //     if (error) {
-//     //       if(process.env.NODE_ENV === "test") console.log("Encounters.insert[error]", error);
+//     //       if(process.env.NODE_ENV === "test") console.log("Measures.insert[error]", error);
 //     //       console.log('error', error)
 //     //       Bert.alert(error.reason, 'danger');
 //     //     }
 //     //     if (result) {
 //     //       if(self.props.onInsert){
-//     //         self.props.onInsert(self.data.encounterId);
+//     //         self.props.onInsert(self.data.measureId);
 //     //       }
-//     //       Bert.alert('Encounter added!', 'success');
+//     //       Bert.alert('Measure added!', 'success');
 //     //     }
 //     //   });
 //     // }
@@ -481,18 +481,18 @@ const useStyles = makeStyles(theme => ({
 //     if(this.props.onDelete){
 //       this.props.onDelete(self);
 //     }
-//     // console.log('Delete encounter...', this.data.encounterId)
+//     // console.log('Delete measure...', this.data.measureId)
 //     // let self = this;
-//     // Encounters._collection.remove({_id: this.data.encounterId}, function(error, result){
+//     // Measures._collection.remove({_id: this.data.measureId}, function(error, result){
 //     //   if (error) {
 //     //     console.log('error', error)
 //     //     Bert.alert(error.reason, 'danger');
 //     //   }
 //     //   if (result) {
 //     //     if(self.props.onDelete){
-//     //       self.props.onDelete(self.data.encounterId);
+//     //       self.props.onDelete(self.data.measureId);
 //     //     }
-//     //     Bert.alert('Encounter deleted!', 'success');
+//     //     Bert.alert('Measure deleted!', 'success');
 //     //   }
 //     // })
 //   }
@@ -501,7 +501,7 @@ const useStyles = makeStyles(theme => ({
 
 
 
-function EncounterDetail(props){
+function MeasureDetail(props){
 
   let classes = useStyles();
 
@@ -533,7 +533,7 @@ function EncounterDetail(props){
   }
 
   return(
-    <div className='EncounterDetails'>
+    <div className='MeasureDetails'>
       <Grid container spacing={3}>
         <Grid item xs={6}>
           <TextField
@@ -541,7 +541,7 @@ function EncounterDetail(props){
             name='subjectDisplay'
             label='Subject Name'
             // TimelineSidescrollPage dialog popup
-            // Getting the following when passing an encounter in via props
+            // Getting the following when passing an measure in via props
             // A component is changing a controlled input of type text to be uncontrolled. Input elements should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled input element for the lifetime of the component. 
             // value={ get(this, 'data.form.subjectDisplay') }
             // onChange={ this.changeState.bind(this, 'subjectDisplay')}
@@ -607,11 +607,11 @@ function EncounterDetail(props){
   );
 }
 
-EncounterDetail.propTypes = {
+MeasureDetail.propTypes = {
   id: PropTypes.string,
   fhirVersion: PropTypes.string,
-  encounterId: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  encounter: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+  measureId: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  measure: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   showPatientInputs: PropTypes.bool,
   showHints: PropTypes.bool,
   onInsert: PropTypes.func,
@@ -619,5 +619,5 @@ EncounterDetail.propTypes = {
   onRemove: PropTypes.func,
   onCancel: PropTypes.func
 };
-ReactMixin(EncounterDetail.prototype, ReactMeteorData);
-export default EncounterDetail;
+ReactMixin(MeasureDetail.prototype, ReactMeteorData);
+export default MeasureDetail;

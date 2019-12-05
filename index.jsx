@@ -1,23 +1,23 @@
 import React from 'react';
 
-import EncountersPage from './client/EncountersPage';
-import EncountersTable from './client/EncountersTable';
-import EncounterDetail from './client/EncounterDetail';
-import { Encounter, Encounters, EncounterSchema } from './lib/Encounters';
+import MeasuresPage from './client/MeasuresPage';
+import MeasuresTable from './client/MeasuresTable';
+import MeasureDetail from './client/MeasureDetail';
+import { Measure, Measures, MeasureSchema } from './lib/Measures';
 
 import { FaHospitalAlt } from 'react-icons/fa';
 
 var DynamicRoutes = [{
-  'name': 'EncountersPage',
-  'path': '/encounters',
-  'component': EncountersPage,
+  'name': 'MeasuresPage',
+  'path': '/measures',
+  'component': MeasuresPage,
   'requireAuth': true
 }];
 
 var SidebarElements = [{
-  'primaryText': 'Encounters',
-  'to': '/encounters',
-  'href': '/encounters',
+  'primaryText': 'Measures',
+  'to': '/measures',
+  'href': '/measures',
   'icon': <FaHospitalAlt />
 }];
 
@@ -25,9 +25,9 @@ export {
   SidebarElements, 
   DynamicRoutes, 
 
-  EncountersPage,
-  EncountersTable,
-  EncounterDetail
+  MeasuresPage,
+  MeasuresTable,
+  MeasureDetail
 };
 
 

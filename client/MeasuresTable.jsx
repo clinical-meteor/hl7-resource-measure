@@ -58,7 +58,7 @@ let styles = {
 }
 
 
-flattenEncounter = function(encounter){
+flattenMeasure = function(measure){
   let result = {
     _id: '',
     meta: '',
@@ -75,31 +75,31 @@ flattenEncounter = function(encounter){
     classCode: ''
   };
 
-  result._id =  get(encounter, 'id') ? get(encounter, 'id') : get(encounter, '_id');
+  result._id =  get(measure, 'id') ? get(measure, 'id') : get(measure, '_id');
 
 
-  if(get(encounter, 'subject.display', '')){
-    result.subject = get(encounter, 'subject.display', '');
+  if(get(measure, 'subject.display', '')){
+    result.subject = get(measure, 'subject.display', '');
   } else {
-    result.subject = get(encounter, 'subject.reference', '');
+    result.subject = get(measure, 'subject.reference', '');
   }
-  result.subjectId = get(encounter, 'subject.reference', '');
+  result.subjectId = get(measure, 'subject.reference', '');
 
-  result.status = get(encounter, 'status', '');
-  result.periodStart = moment(get(encounter, 'period.start', '')).format("YYYY-MM-DD hh:mm");
-  result.periodEnd = moment(get(encounter, 'period.end', '')).format("YYYY-MM-DD hh:ss");
-  result.reasonCode = get(encounter, 'reason[0].coding[0].code', '');
-  result.reasonDisplay = get(encounter, 'reason[0].coding[0].display', '');
-  result.typeCode = get(encounter, 'type[0].coding[0].code', '');
-  result.typeDisplay = get(encounter, 'type[0].coding[0].display', '');
+  result.status = get(measure, 'status', '');
+  result.periodStart = moment(get(measure, 'period.start', '')).format("YYYY-MM-DD hh:mm");
+  result.periodEnd = moment(get(measure, 'period.end', '')).format("YYYY-MM-DD hh:ss");
+  result.reasonCode = get(measure, 'reason[0].coding[0].code', '');
+  result.reasonDisplay = get(measure, 'reason[0].coding[0].display', '');
+  result.typeCode = get(measure, 'type[0].coding[0].code', '');
+  result.typeDisplay = get(measure, 'type[0].coding[0].display', '');
 
-  if(get(encounter, 'class.code')){
-    result.classCode = get(encounter, 'class.code', '');
-  } else if(get(encounter, 'class')){
-    result.classCode = get(encounter, 'class', '');
+  if(get(measure, 'class.code')){
+    result.classCode = get(measure, 'class.code', '');
+  } else if(get(measure, 'class')){
+    result.classCode = get(measure, 'class', '');
   }
 
-  let statusHistory = get(encounter, 'statusHistory', []);
+  let statusHistory = get(measure, 'statusHistory', []);
 
   result.statusHistory = statusHistory.length;
 
@@ -107,12 +107,12 @@ flattenEncounter = function(encounter){
 }
 
 
-// export class EncountersTable extends React.Component {
+// export class MeasuresTable extends React.Component {
 //   constructor(props) {
 //     super(props);
 //     this.state = {
 //       selected: [],
-//       encounters: []
+//       measures: []
 //     }
 //   }
 //   getMeteorData() {
@@ -124,15 +124,15 @@ flattenEncounter = function(encounter){
 //         text: Glass.darkroom()
 //       },
 //       selected: [],
-//       encounters: []
+//       measures: []
 //     };
 
 //     if(props.data){
 //       console.log('props.data', props.data);
 
 //       if(props.data.length > 0){              
-//         props.data.forEach(function(encounter){
-//           data.encounters.push(flattenEncounter(encounter));
+//         props.data.forEach(function(measure){
+//           data.measures.push(flattenMeasure(measure));
 //         });  
 //       }
 //     } else {
@@ -146,21 +146,21 @@ flattenEncounter = function(encounter){
 //         }
 //       }
 
-//       data.encounters = Encounters.find(query).map(function(encounter){
-//         return flattenEncounter(encounter);
+//       data.measures = Measures.find(query).map(function(measure){
+//         return flattenMeasure(measure);
 //       });
 //     }
 
-//     if(process.env.NODE_ENV === "test") console.log("EncountersTable[data]", data);
+//     if(process.env.NODE_ENV === "test") console.log("MeasuresTable[data]", data);
 //     return data;
 //   }
 
 
 
 
-function EncountersTable(props){
-  console.log('EncountersTable.props', props);
-  // console.log('EncountersTable.props.encounters', props.encounters);
+function MeasuresTable(props){
+  console.log('MeasuresTable.props', props);
+  // console.log('MeasuresTable.props.measures', props.measures);
 
   const classes = useStyles();
 
@@ -189,9 +189,9 @@ function EncountersTable(props){
     return "";
   }
   function rowClick(id){
-    Session.set("selectedEncounterId", id);
-    Session.set('encounterPageTabIndex', 1);
-    Session.set('encounterDetailState', false);
+    Session.set("selectedMeasureId", id);
+    Session.set('measurePageTabIndex', 1);
+    Session.set('measureDetailState', false);
   }
   function renderActionIconsHeader(){
     if (!props.hideActionIcons) {
@@ -200,7 +200,7 @@ function EncountersTable(props){
       );
     }
   }
-  function renderActionIcons(encounter ){
+  function renderActionIcons(measure ){
     if (!props.hideActionIcons) {
       let iconStyle = {
         marginLeft: '4px', 
@@ -211,14 +211,14 @@ function EncountersTable(props){
 
       return (
         <TableCell className='actionIcons' style={{minWidth: '120px'}}>
-          <FaTags style={iconStyle} onClick={ onMetaClick.bind(encounter)} />
-          <GoTrashcan style={iconStyle} onClick={ removeRecord.bind(encounter._id)} />  
+          <FaTags style={iconStyle} onClick={ onMetaClick.bind(measure)} />
+          <GoTrashcan style={iconStyle} onClick={ removeRecord.bind(measure._id)} />  
         </TableCell>
       );
     }
   } 
   function removeRecord(_id){
-    console.log('Remove encounter ', _id)
+    console.log('Remove measure ', _id)
     if(props.onRemoveRecord){
       props.onRemoveRecord(_id);
     }
@@ -390,71 +390,71 @@ function EncountersTable(props){
 
 
   let tableRows = [];
-  let encountersToRender = [];
-  if(props.encounters){
-    if(props.encounters.length > 0){              
-      props.encounters.forEach(function(encounter){
-        encountersToRender.push(flattenEncounter(encounter));
+  let measuresToRender = [];
+  if(props.measures){
+    if(props.measures.length > 0){              
+      props.measures.forEach(function(measure){
+        measuresToRender.push(flattenMeasure(measure));
       });  
     }
   }
 
-  if(encountersToRender.length === 0){
-    console.log('No encounters to render');
+  if(measuresToRender.length === 0){
+    console.log('No measures to render');
     // footer = <TableNoData noDataPadding={ props.noDataMessagePadding } />
   } else {
-    for (var i = 0; i < encountersToRender.length; i++) {
+    for (var i = 0; i < measuresToRender.length; i++) {
       if(props.multiline){
         tableRows.push(
-          <TableRow className="encounterRow" key={i} onClick={ rowClick(encountersToRender[i]._id)} >
+          <TableRow className="measureRow" key={i} onClick={ rowClick(measuresToRender[i]._id)} >
             { renderToggle() }
-            { renderActionIcons(encountersToRender[i]) }
-            { renderSubject(encountersToRender[i].subject)}
-            { renderClassCode(encountersToRender[i].classCode) }
-            { renderTypeCode(encountersToRender[i].typeCode) }
-            {/* <TableCell className='classCode' >{encountersToRender[i].classCode }</TableCell> */}
-            {/* <TableCell className='typeCode' >{encountersToRender[i].typeCode }</TableCell> */}
-            <TableCell className='typeDisplay' >{encountersToRender[i].typeDisplay }</TableCell>
-            { renderReasonCode(encountersToRender[i].reasonCode)}
-            { renderReason(encountersToRender[i].reasonDisplay)}
-            {/* <TableCell className='reasonCode' >{encountersToRender[i].reasonCode }</TableCell>
-            <TableCell className='reasonDisplay' >{encountersToRender[i].reasonDisplay }</TableCell> */}
+            { renderActionIcons(measuresToRender[i]) }
+            { renderSubject(measuresToRender[i].subject)}
+            { renderClassCode(measuresToRender[i].classCode) }
+            { renderTypeCode(measuresToRender[i].typeCode) }
+            {/* <TableCell className='classCode' >{measuresToRender[i].classCode }</TableCell> */}
+            {/* <TableCell className='typeCode' >{measuresToRender[i].typeCode }</TableCell> */}
+            <TableCell className='typeDisplay' >{measuresToRender[i].typeDisplay }</TableCell>
+            { renderReasonCode(measuresToRender[i].reasonCode)}
+            { renderReason(measuresToRender[i].reasonDisplay)}
+            {/* <TableCell className='reasonCode' >{measuresToRender[i].reasonCode }</TableCell>
+            <TableCell className='reasonDisplay' >{measuresToRender[i].reasonDisplay }</TableCell> */}
 
-            { renderStatus(encountersToRender[i].status)}
-            { renderHistory(encountersToRender[i].statusHistory)}
+            { renderStatus(measuresToRender[i].status)}
+            { renderHistory(measuresToRender[i].statusHistory)}
 
-            {/* <TableCell className='status' >{encountersToRender[i].status }</TableCell>
-            <TableCell className='statusHistory' >{encountersToRender[i].statusHistory }</TableCell> */}
-            <TableCell className='periodStart' style={{minWidth: '140px'}}>{encountersToRender[i].periodStart }</TableCell>
-            <TableCell className='periodEnd' style={{minWidth: '140px'}}>{encountersToRender[i].periodEnd }</TableCell>
-            { renderBarcode(encountersToRender[i]._id)}
+            {/* <TableCell className='status' >{measuresToRender[i].status }</TableCell>
+            <TableCell className='statusHistory' >{measuresToRender[i].statusHistory }</TableCell> */}
+            <TableCell className='periodStart' style={{minWidth: '140px'}}>{measuresToRender[i].periodStart }</TableCell>
+            <TableCell className='periodEnd' style={{minWidth: '140px'}}>{measuresToRender[i].periodEnd }</TableCell>
+            { renderBarcode(measuresToRender[i]._id)}
           </TableRow>
         );    
 
       } else {
         tableRows.push(
-          <TableRow className="encounterRow" key={i} onClick={ rowClick.bind(encountersToRender[i]._id)} >            
+          <TableRow className="measureRow" key={i} onClick={ rowClick.bind(measuresToRender[i]._id)} >            
             { renderToggle() }
-            { renderActionIcons(encountersToRender[i]) }
-            { renderSubject(encountersToRender[i].subject)}
-            { renderClassCode(encountersToRender[i].classCode) }
-            { renderTypeCode(encountersToRender[i].typeCode) }
-            {/* <TableCell className='classCode' >{ encountersToRender[i].classCode }</TableCell> */}
-            {/* <TableCell className='typeCode' >{ encountersToRender[i].typeCode }</TableCell> */}
-            <TableCell className='typeDisplay' >{ encountersToRender[i].typeDisplay }</TableCell>
-            { renderReasonCode(encountersToRender[i].reasonCode)}
-            { renderReason(encountersToRender[i].reasonDisplay)}
-            {/* <TableCell className='reasonCode' >{ encountersToRender[i].reasonCode }</TableCell>
-            <TableCell className='reasonDisplay' >{ encountersToRender[i].reasonDisplay }</TableCell> */}
+            { renderActionIcons(measuresToRender[i]) }
+            { renderSubject(measuresToRender[i].subject)}
+            { renderClassCode(measuresToRender[i].classCode) }
+            { renderTypeCode(measuresToRender[i].typeCode) }
+            {/* <TableCell className='classCode' >{ measuresToRender[i].classCode }</TableCell> */}
+            {/* <TableCell className='typeCode' >{ measuresToRender[i].typeCode }</TableCell> */}
+            <TableCell className='typeDisplay' >{ measuresToRender[i].typeDisplay }</TableCell>
+            { renderReasonCode(measuresToRender[i].reasonCode)}
+            { renderReason(measuresToRender[i].reasonDisplay)}
+            {/* <TableCell className='reasonCode' >{ measuresToRender[i].reasonCode }</TableCell>
+            <TableCell className='reasonDisplay' >{ measuresToRender[i].reasonDisplay }</TableCell> */}
 
-            { renderStatus(encountersToRender[i].status)}
-            { renderHistory(encountersToRender[i].statusHistory)}
+            { renderStatus(measuresToRender[i].status)}
+            { renderHistory(measuresToRender[i].statusHistory)}
 
-            {/* <TableCell className='status' >{ encountersToRender[i].status }</TableCell>
-            <TableCell className='statusHistory' >{ encountersToRender[i].statusHistory }</TableCell> */}
-            <TableCell className='periodStart' style={{minWidth: '140px'}}>{ encountersToRender[i].periodStart }</TableCell>
-            <TableCell className='periodEnd' style={{minWidth: '140px'}}>{ encountersToRender[i].periodEnd }</TableCell>
-            { renderBarcode(encountersToRender[i]._id)}
+            {/* <TableCell className='status' >{ measuresToRender[i].status }</TableCell>
+            <TableCell className='statusHistory' >{ measuresToRender[i].statusHistory }</TableCell> */}
+            <TableCell className='periodStart' style={{minWidth: '140px'}}>{ measuresToRender[i].periodStart }</TableCell>
+            <TableCell className='periodEnd' style={{minWidth: '140px'}}>{ measuresToRender[i].periodEnd }</TableCell>
+            { renderBarcode(measuresToRender[i]._id)}
           </TableRow>
         );    
       }
@@ -495,9 +495,9 @@ function EncountersTable(props){
   );
 }
 
-EncountersTable.propTypes = {
+MeasuresTable.propTypes = {
   barcodes: PropTypes.bool,
-  encounters: PropTypes.array,
+  measures: PropTypes.array,
   query: PropTypes.object,
   paginationLimit: PropTypes.number,
   hideClassCode: PropTypes.bool,
@@ -521,4 +521,4 @@ EncountersTable.propTypes = {
 };
 
 
-export default EncountersTable; 
+export default MeasuresTable; 
