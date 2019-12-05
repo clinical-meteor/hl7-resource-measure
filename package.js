@@ -33,7 +33,7 @@ Npm.depends({
   "simpl-schema": "1.5.3",
   "moment": "2.22.2",
   "validator": "10.9.0",
-  "lodash": "4.17.4",
+  "lodash": "4.17.12",
   "material-fhir-ui": "0.7.6",
   "react-icons": "3.8.0",
   "styled-components": "4.4.1"
