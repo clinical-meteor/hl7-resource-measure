@@ -22,9 +22,7 @@ import ReactMixin  from 'react-mixin';
 
 import MeasureDetail from './MeasureDetail';
 import MeasuresTable from './MeasuresTable';
-
-import { StyledCard, PageCanvas } from 'material-fhir-ui';
-// import StyledCard from './StyledCard';
+import StyledCard from './StyledCard';
 
 import { get, cloneDeep } from 'lodash';
 
@@ -36,11 +34,8 @@ Session.setDefault('selectedMeasureId', false);
 Session.setDefault('fhirVersion', 'v1.0.2');
 Session.setDefault('measuresArray', []);
 
-
-// ==============================================================================================================
 // Global Theming 
-
-// This is necessary for the Material UI component render layer
+  // This is necessary for the Material UI component render layer
   let theme = {
     primaryColor: "rgb(108, 183, 110)",
     primaryText: "rgba(255, 255, 255, 1) !important",
@@ -108,8 +103,16 @@ Session.setDefault('measuresArray', []);
     }
   });
 
-// ==============================================================================================================
-// Tabs
+// const StyledCard = styled(Card)`
+//   background: ` + theme.paperColor + `;
+//   border-radius: 3px;
+//   border: 0;
+//   color: ` + theme.paperTextColor + `;
+//   height: 48px;
+//   padding: 0 30px;
+//   box-shadow: 0 3px 5px 2px rgba(255, 105, 135, 0.3);
+// `;
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -128,8 +131,6 @@ function TabPanel(props) {
   );
 }
 
-// ==============================================================================================================
-// React Class Component
 
 
 
@@ -181,7 +182,7 @@ export class MeasuresPage extends React.Component {
     // data.style.appbar = Glass.darkroom(data.style.appbar);
     // data.style.tab = Glass.darkroom(data.style.tab);
 
-    console.log("MeasuresPage[data]", data);
+    // console.log("MeasuresPage[data]", data);
     return data;
   }
 
@@ -204,12 +205,12 @@ export class MeasuresPage extends React.Component {
     Measures._collection.remove({_id: get(context, 'state.measureId')}, function(error, result){
       if (error) {
         if(process.env.NODE_ENV === "test") console.log('Measures.insert[error]', error);
-        // Bert.alert(error.reason, 'danger');
+        Bert.alert(error.reason, 'danger');
       }
       if (result) {
         Session.set('selectedMeasureId', false);
         HipaaLogger.logEvent({eventType: "delete", userId: Meteor.userId(), userName: Meteor.user().fullName(), collectionName: "Measures", recordId: context.state.measureId});
-        // Bert.alert('Measure removed!', 'success');
+        Bert.alert('Measure removed!', 'success');
       }
     });
     Session.set('measurePageTabIndex', 1);
@@ -248,13 +249,13 @@ export class MeasuresPage extends React.Component {
         Measures._collection.update({_id: get(context, 'state.measureId')}, {$set: fhirMeasureData }, function(error, result){
           if (error) {
             if(process.env.NODE_ENV === "test") console.log("Measures.insert[error]", error);
-            // Bert.alert(error.reason, 'danger');
+            Bert.alert(error.reason, 'danger');
           }
           if (result) {
             HipaaLogger.logEvent({eventType: "update", userId: Meteor.userId(), userName: Meteor.user().fullName(), collectionName: "Measures", recordId: context.state.measureId});
             Session.set('selectedMeasureId', false);
             Session.set('measurePageTabIndex', 1);
-            // Bert.alert('Measure added!', 'success');
+            Bert.alert('Measure added!', 'success');
           }
         });
       } else {
@@ -265,13 +266,13 @@ export class MeasuresPage extends React.Component {
         Measures._collection.insert(fhirMeasureData, function(error, result) {
           if (error) {
             if(process.env.NODE_ENV === "test")  console.log('Measures.insert[error]', error);
-            // Bert.alert(error.reason, 'danger');
+            Bert.alert(error.reason, 'danger');
           }
           if (result) {
             HipaaLogger.logEvent({eventType: "create", userId: Meteor.userId(), userName: Meteor.user().fullName(), collectionName: "Measures", recordId: context.state.measureId});
             Session.set('measurePageTabIndex', 1);
             Session.set('selectedMeasureId', false);
-            // Bert.alert('Measure added!', 'success');
+            Bert.alert('Measure added!', 'success');
           }
         });
       }
@@ -332,16 +333,11 @@ export class MeasuresPage extends React.Component {
       Session.set('measurePageTabIndex', newValue)
     }
 
-    let headerHeight = 64;
-    if(get(Meteor, 'settings.public.defaults.prominantHeader', false)){
-      headerHeight = 128;
-    }
-
     return (
-      <PageCanvas id="measuresPage" headerHeight={headerHeight}>
+      <div id="measuresPage" style={{paddingLeft: '100px', paddingRight: '100px', paddingBottom: '100px'}}>
         <MuiThemeProvider theme={muiTheme} >
           {/* <Container> */}
-            <StyledCard height="auto" scrollable={true} margin={20} >
+            <StyledCard>
               <CardHeader
                 title="Measures"
               />
@@ -358,12 +354,23 @@ export class MeasuresPage extends React.Component {
                         hideSubjects={false}
                         noDataMessagePadding={100}
                         actionButtonLabel="Send"
-                        measures={ this.data.measures } 
+                        measures={ this.data.measures }
                         paginationLimit={10}
+                        hideSubjects={true}
+                        hideClassCode={false}
+                        hideReasonCode={false}
+                        hideReason={false}
+                        hideHistory={false}
+                        // appWidth={ Session.get('appWidth') }
+                        // onRowClick={ this.onTableRowClick }
+                        // onCellClick={ this.onTableCellClick }
+                        // onActionButtonClick={this.tableActionButtonClick}
+                        // onRemoveRecord={ this.onDeleteMeasure }
+                        // query={this.data.measuresTableQuery}
                         />
                     </TabPanel>
                     <TabPanel value={this.data.tabIndex} index={1}>
-                      <MeasureDetail 
+                      {/* <MeasureDetail 
                         id='newMeasure' 
                         displayDatePicker={true} 
                         displayBarcodes={false}
@@ -374,7 +381,7 @@ export class MeasuresPage extends React.Component {
                         // onDelete={ this.onDeleteMeasure }
                         // onUpsert={ this.onUpsertMeasure }
                         // onCancel={ this.onCancelUpsertMeasure } 
-                        />
+                        /> */}
                     </TabPanel>
 
                 {/* <Tabs id="measuresPageTabs" default value={this.data.tabIndex} onChange={this.handleTabChange} initialSelectedIndex={1}>
@@ -431,7 +438,7 @@ export class MeasuresPage extends React.Component {
             </StyledCard>
           {/* </Container> */}
         </MuiThemeProvider>
-      </PageCanvas>
+      </div>
     );
   }
 }

@@ -62,19 +62,98 @@ flattenMeasure = function(measure){
   let result = {
     _id: '',
     meta: '',
-    title: '',
-    description: '',
-    identifier: ''
+    subject: '',
+    subjectId: '',
+    status: '',
+    statusHistory: 0,
+    periodStart: '',
+    periodEnd: '',
+    reasonCode: '', 
+    reasonDisplay: '', 
+    typeCode: '',
+    typeDisplay: '',
+    classCode: ''
   };
 
   result._id =  get(measure, 'id') ? get(measure, 'id') : get(measure, '_id');
-  result.id = get(measure, 'id', '');
-  result.title = get(measure, 'title', '');
-  result.description = get(measure, 'description', '');
-  result.identifier = get(measure, 'identifier[0].value', '');
+
+
+  if(get(measure, 'subject.display', '')){
+    result.subject = get(measure, 'subject.display', '');
+  } else {
+    result.subject = get(measure, 'subject.reference', '');
+  }
+  result.subjectId = get(measure, 'subject.reference', '');
+
+  result.status = get(measure, 'status', '');
+  result.periodStart = moment(get(measure, 'period.start', '')).format("YYYY-MM-DD hh:mm");
+  result.periodEnd = moment(get(measure, 'period.end', '')).format("YYYY-MM-DD hh:ss");
+  result.reasonCode = get(measure, 'reason[0].coding[0].code', '');
+  result.reasonDisplay = get(measure, 'reason[0].coding[0].display', '');
+  result.typeCode = get(measure, 'type[0].coding[0].code', '');
+  result.typeDisplay = get(measure, 'type[0].coding[0].display', '');
+
+  if(get(measure, 'class.code')){
+    result.classCode = get(measure, 'class.code', '');
+  } else if(get(measure, 'class')){
+    result.classCode = get(measure, 'class', '');
+  }
+
+  let statusHistory = get(measure, 'statusHistory', []);
+
+  result.statusHistory = statusHistory.length;
 
   return result;
 }
+
+
+// export class MeasuresTable extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       selected: [],
+//       measures: []
+//     }
+//   }
+//   getMeteorData() {
+
+//     // this should all be handled by props
+//     // or a mixin!
+//     let data = {
+//       style: {
+//         text: Glass.darkroom()
+//       },
+//       selected: [],
+//       measures: []
+//     };
+
+//     if(props.data){
+//       console.log('props.data', props.data);
+
+//       if(props.data.length > 0){              
+//         props.data.forEach(function(measure){
+//           data.measures.push(flattenMeasure(measure));
+//         });  
+//       }
+//     } else {
+//       let query = {};
+//       if(props.query){
+//         query = props.query
+//       }
+//       if(props.hideEnteredInError){
+//         query['verificationStatus'] = {
+//           $nin: ['entered-in-error']  // unconfirmed | provisional | differential | confirmed | refuted | entered-in-error
+//         }
+//       }
+
+//       data.measures = Measures.find(query).map(function(measure){
+//         return flattenMeasure(measure);
+//       });
+//     }
+
+//     if(process.env.NODE_ENV === "test") console.log("MeasuresTable[data]", data);
+//     return data;
+//   }
 
 
 
@@ -162,30 +241,30 @@ function MeasuresTable(props){
     }
   }
   function renderBarcode(id){
-    if (!props.renderBarcode) {
+    if (!props.hideIdentifier) {
       return (
-        <TableCell><span className="barcode helvetica">{id}</span></TableCell>
+        <TableCell><span className="barcode">{id}</span></TableCell>
       );
     }
   }
   function renderBarcodeHeader(){
-    if (!props.renderBarcode) {
+    if (!props.hideIdentifier) {
       return (
         <TableCell>System ID</TableCell>
       );
     }
   }
-  function renderIdentifier(id){
-    if (!props.hideIdentifier) {
+  function renderSubject(id){
+    if (!props.hideSubjects) {
       return (
-        <TableCell className='identifier'>{ id }</TableCell>
+        <TableCell className='name'>{ id }</TableCell>
       );
     }
   }
-  function renderIdentifierHeader(){
-    if (!props.hideIdentifier) {
+  function renderSubjectHeader(){
+    if (!props.hideSubjects) {
       return (
-        <TableCell className='identifier'>Identifier</TableCell>
+        <TableCell className='name'>Subject</TableCell>
       );
     }
   }
@@ -219,31 +298,31 @@ function MeasuresTable(props){
     }
   }
 
-  function renderDescriptionHeader(){
-    if (!props.hideDescription) {
+  function renderTypeCodeHeader(){
+    if (!props.hideTypeCode) {
       return (
-        <TableCell className='description'>Description</TableCell>
+        <TableCell className='typecode'>TypeCode</TableCell>
       );
     }
   }
-  function renderDescription(text){
-    if (!props.hideDescription) {
+  function renderTypeCode(code){
+    if (!props.hideTypeCode) {
       return (
-        <TableCell className='description'>{ text }</TableCell>
+        <TableCell className='typecode'>{ code }</TableCell>
       );  
     }
   }
-  function renderTitleHeader(){
-    if (!props.hideTitle) {
+  function renderClassCodeHeader(){
+    if (!props.hideClassCode) {
       return (
-        <TableCell className='title'>Title</TableCell>
+        <TableCell className='classcode'>Class</TableCell>
       );
     }
   }
-  function renderTitle(text){
-    if (!props.hideTitle) {
+  function renderClassCode(code){
+    if (!props.hideClassCode) {
       return (
-        <TableCell className='title'>{ text }</TableCell>
+        <TableCell className='classcode'>{ code }</TableCell>
       );  
     }
   }
@@ -311,43 +390,71 @@ function MeasuresTable(props){
 
 
   let tableRows = [];
-  let measureToRender = [];
+  let measuresToRender = [];
   if(props.measures){
     if(props.measures.length > 0){              
       props.measures.forEach(function(measure){
-        measureToRender.push(flattenMeasure(measure));
+        measuresToRender.push(flattenMeasure(measure));
       });  
     }
   }
 
-  logger.debug('measureToRender', measureToRender);
-
-  if(measureToRender.length === 0){
-    logger.trace('MeasuresTable:  No measures to render.');
+  if(measuresToRender.length === 0){
+    console.log('No measures to render');
     // footer = <TableNoData noDataPadding={ props.noDataMessagePadding } />
   } else {
-    for (var i = 0; i < measureToRender.length; i++) {
+    for (var i = 0; i < measuresToRender.length; i++) {
       if(props.multiline){
         tableRows.push(
-          <TableRow className="measureRow" key={i} onClick={ rowClick(measureToRender[i]._id)} >
+          <TableRow className="measureRow" key={i} onClick={ rowClick(measuresToRender[i]._id)} >
             { renderToggle() }
-            { renderActionIcons(measureToRender[i]) }
-            { renderIdentifier(measureToRender[i].identifier)}
-            { renderTitle(measureToRender[i].title) }
-            { renderDescription(measureToRender[i].description) }
-            { renderBarcode(measureToRender[i]._id)}
+            { renderActionIcons(measuresToRender[i]) }
+            { renderSubject(measuresToRender[i].subject)}
+            { renderClassCode(measuresToRender[i].classCode) }
+            { renderTypeCode(measuresToRender[i].typeCode) }
+            {/* <TableCell className='classCode' >{measuresToRender[i].classCode }</TableCell> */}
+            {/* <TableCell className='typeCode' >{measuresToRender[i].typeCode }</TableCell> */}
+            <TableCell className='typeDisplay' >{measuresToRender[i].typeDisplay }</TableCell>
+            { renderReasonCode(measuresToRender[i].reasonCode)}
+            { renderReason(measuresToRender[i].reasonDisplay)}
+            {/* <TableCell className='reasonCode' >{measuresToRender[i].reasonCode }</TableCell>
+            <TableCell className='reasonDisplay' >{measuresToRender[i].reasonDisplay }</TableCell> */}
+
+            { renderStatus(measuresToRender[i].status)}
+            { renderHistory(measuresToRender[i].statusHistory)}
+
+            {/* <TableCell className='status' >{measuresToRender[i].status }</TableCell>
+            <TableCell className='statusHistory' >{measuresToRender[i].statusHistory }</TableCell> */}
+            <TableCell className='periodStart' style={{minWidth: '140px'}}>{measuresToRender[i].periodStart }</TableCell>
+            <TableCell className='periodEnd' style={{minWidth: '140px'}}>{measuresToRender[i].periodEnd }</TableCell>
+            { renderBarcode(measuresToRender[i]._id)}
           </TableRow>
         );    
 
       } else {
         tableRows.push(
-          <TableRow className="measureRow" key={i} onClick={ rowClick.bind(measureToRender[i]._id)} >            
+          <TableRow className="measureRow" key={i} onClick={ rowClick.bind(measuresToRender[i]._id)} >            
             { renderToggle() }
-            { renderActionIcons(measureToRender[i]) }
-            { renderIdentifier(measureToRender[i].identifier)}
-            { renderTitle(measureToRender[i].title) }
-            { renderDescription(measureToRender[i].description) }
-            { renderBarcode(measureToRender[i]._id)}
+            { renderActionIcons(measuresToRender[i]) }
+            { renderSubject(measuresToRender[i].subject)}
+            { renderClassCode(measuresToRender[i].classCode) }
+            { renderTypeCode(measuresToRender[i].typeCode) }
+            {/* <TableCell className='classCode' >{ measuresToRender[i].classCode }</TableCell> */}
+            {/* <TableCell className='typeCode' >{ measuresToRender[i].typeCode }</TableCell> */}
+            <TableCell className='typeDisplay' >{ measuresToRender[i].typeDisplay }</TableCell>
+            { renderReasonCode(measuresToRender[i].reasonCode)}
+            { renderReason(measuresToRender[i].reasonDisplay)}
+            {/* <TableCell className='reasonCode' >{ measuresToRender[i].reasonCode }</TableCell>
+            <TableCell className='reasonDisplay' >{ measuresToRender[i].reasonDisplay }</TableCell> */}
+
+            { renderStatus(measuresToRender[i].status)}
+            { renderHistory(measuresToRender[i].statusHistory)}
+
+            {/* <TableCell className='status' >{ measuresToRender[i].status }</TableCell>
+            <TableCell className='statusHistory' >{ measuresToRender[i].statusHistory }</TableCell> */}
+            <TableCell className='periodStart' style={{minWidth: '140px'}}>{ measuresToRender[i].periodStart }</TableCell>
+            <TableCell className='periodEnd' style={{minWidth: '140px'}}>{ measuresToRender[i].periodEnd }</TableCell>
+            { renderBarcode(measuresToRender[i]._id)}
           </TableRow>
         );    
       }
@@ -360,9 +467,24 @@ function MeasuresTable(props){
         <TableRow>
           { renderToggleHeader() }
           { renderActionIconsHeader() }
-          { renderIdentifierHeader() }
-          { renderTitleHeader() }
-          { renderDescriptionHeader() }
+          { renderSubjectHeader() }
+          { renderClassCodeHeader() }
+          { renderTypeCodeHeader() }
+          {/* <TableCell className='classCode'>Class</TableCell> */}
+          {/* <TableCell className='typeCode'>TypeCode</TableCell> */}
+          <TableCell className='typeDisplay'>Type</TableCell>
+          { renderReasonCodeHeader() }
+          { renderReasonHeader() }
+          {/* <TableCell className='reasonCode'>ReasonCode</TableCell>
+          <TableCell className='reasonDisplay'>Reason</TableCell> */}
+
+          { renderStatusHeader() }
+          { renderHistoryHeader() }
+
+          {/* <TableCell className='status'>Status</TableCell>
+          <TableCell className='statusHistory'>History</TableCell> */}
+          <TableCell className='start' style={{minWidth: '140px'}}>Start</TableCell>
+          <TableCell className='end' style={{minWidth: '140px'}}>End</TableCell>
           { renderBarcodeHeader() }
         </TableRow>
       </TableHead>
@@ -378,10 +500,18 @@ MeasuresTable.propTypes = {
   measures: PropTypes.array,
   query: PropTypes.object,
   paginationLimit: PropTypes.number,
+  hideClassCode: PropTypes.bool,
+  hideTypeCode: PropTypes.bool,
+  hideReason: PropTypes.bool,
+  hideReasonCode: PropTypes.bool,
+  hideSubjects: PropTypes.bool,
+  hideCheckboxes: PropTypes.bool,
+  hideActionIcons: PropTypes.bool,
   hideIdentifier: PropTypes.bool,
-  hideTitle: PropTypes.bool,
-  hideDescription: PropTypes.bool,
-  renderBarcode: PropTypes.bool,
+  hideStatus: PropTypes.bool,
+  hideHistory: PropTypes.bool,
+  enteredInError: PropTypes.bool,
+  multiline: PropTypes.bool,
   onCellClick: PropTypes.func,
   onRowClick: PropTypes.func,
   onMetaClick: PropTypes.func,

@@ -524,6 +524,7 @@ function MeasureDetail(props){
   return(
     <div className='MeasureDetails'>
       <Grid container spacing={3}>
+<<<<<<< HEAD:client/MeasureDetail.jsx
         <Grid row xs={12}>
           <Grid item xs={9}>
             <TextField
@@ -541,6 +542,70 @@ function MeasureDetail(props){
           </Grid>
           <Grid item xs={3}>
           </Grid>
+=======
+        <Grid item xs={6}>
+          <TextField
+            id='subjectDisplayInput'                
+            name='subjectDisplay'
+            label='Subject Name'
+            // TimelineSidescrollPage dialog popup
+            // Getting the following when passing an measure in via props
+            // A component is changing a controlled input of type text to be uncontrolled. Input elements should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled input element for the lifetime of the component. 
+            // value={ get(this, 'data.form.subjectDisplay') }
+            // onChange={ this.changeState.bind(this, 'subjectDisplay')}
+            // hintText={ setHint('Jane Doe') }
+            // floatingLabelFixed={true}
+            fullWidth
+            /><br/>
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            id='subjectIdInput'                
+            name='subjectReference'
+            label='Subject ID'
+            // value={ get(this, 'data.form.subjectReference') }
+            // onChange={ this.changeState.bind(this, 'subjectReference')}
+            // hintText={ setHint('Patient/12345') }
+            // floatingLabelFixed={true}
+            fullWidth
+            /><br/>
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            id='categoryTextInput'                
+            name='category'
+            label='Category'
+            // value={ get(this, 'data.form.category') }
+            // onChange={ this.changeState.bind(this, 'category')}
+            // hintText={ setHint('Vital Signs') }
+            // floatingLabelFixed={true}
+            fullWidth
+            /><br/>
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            id='deviceDisplayInput'                
+            name='deviceDisplay'
+            label='Device Name'
+            // value={ get(this, 'data.form.deviceDisplay') }
+            // onChange={ this.changeState.bind(this, 'deviceDisplay')}
+            // hintText={ setHint('iHealth Blood Pressure Cuff') }
+            // floatingLabelFixed={true}
+            fullWidth
+            /><br/>
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            id='deviceReferenceInput'                
+            name='deviceReference'
+            label='Device Name'
+            // value={ get(this, 'data.form.deviceReference') }
+            // onChange={ this.changeState.bind(this, 'deviceReference')}
+            //hintText={ setHint('Device/444') }
+            //floatingLabelFixed={true}
+            fullWidth
+            /><br/>
+>>>>>>> 6c8e716a7915d937e4dfa67db1df329d95852221:client/MeasureDetail.jsx
         </Grid>
         <Grid row xs={12}>
           <Grid item xs={9}>
